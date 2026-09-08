@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم الطاقة</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-base: #070d1a;
+  --bg-card: #0d1628;
+  --bg-card2: #111e35;
+  --accent: #1a6fff;
+  --accent2: #0ea5e9;
+  --accent-glow: rgba(26,111,255,0.18);
+  --green: #22d3a0;
+  --red: #f43f5e;
+  --amber: #f59e0b;
+  --text-primary: #e8f0ff;
+  --text-muted: #6b82a8;
+  --text-dim: #3a4f72;
+  --border: rgba(26,111,255,0.13);
+  --border-bright: rgba(26,111,255,0.35);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* grid lines background */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(26,111,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,111,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+.shell { position:relative; z-index:1; display:flex; min-height:100vh; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0;
+}
+
+.logo-wrap {
+  padding: 0 24px 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 18px;
+}
+
+.logo-text { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height:1.2; }
+.logo-sub  { font-size: 10px; color: var(--text-muted); }
+
+.nav { padding: 20px 0; flex:1; }
+
+.nav-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: .1em;
+  padding: 0 24px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .2s;
+  border-right: 3px solid transparent;
+}
+
+.nav-item:hover { color: var(--text-primary); background: rgba(26,111,255,0.06); }
+.nav-item.active {
+  color: var(--accent2);
+  background: rgba(26,111,255,0.1);
+  border-right-color: var(--accent);
+}
+
+.nav-icon { font-size: 16px; width:20px; text-align:center; }
+
+.sidebar-footer {
+  padding: 20px 24px 0;
+  border-top: 1px solid var(--border);
+}
+
+.live-dot {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text-muted);
+}
+
+.dot {
+  width:8px; height:8px; border-radius:50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100%{ opacity:1; } 50%{ opacity:.4; }
+}
+
+/* ── Main ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(13,22,40,0.6);
+  backdrop-filter: blur(12px);
+}
+
+.topbar-title { font-size: 18px; font-weight: 600; }
+.topbar-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.topbar-controls { display:flex; gap:10px; align-items:center; }
+
+.filter-btn {
+  padding: 7px 16px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  border-color: var(--accent);
+  color: var(--accent2);
+  background: var(--accent-glow);
+}
+
+.content { flex:1; padding: 28px 32px; overflow-y:auto; display:flex; flex-direction:column; gap:24px; }
+
+/* ── KPI Cards ── */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+
+.kpi-card:hover { border-color: var(--border-bright); }
+
+.kpi-card::before {
+  content:'';
+  position:absolute;
+  top:0; right:0;
+  width:80px; height:80px;
+  border-radius:0 12px 0 80px;
+  opacity:.25;
+}
+
+.kpi-card.blue::before  { background: var(--accent); }
+.kpi-card.green::before { background: var(--green); }
+.kpi-card.amber::before { background: var(--amber); }
+.kpi-card.red::before   { background: var(--red); }
+
+.kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.kpi-label { font-size: 11px; color: var(--text-muted); }
+.kpi-icon { font-size: 20px; }
+
+.kpi-value { font-size: 28px; font-weight: 700; line-height:1; margin-bottom: 6px; }
+.kpi-card.blue  .kpi-value { color: var(--accent2); }
+.kpi-card.green .kpi-value { color: var(--green); }
+.kpi-card.amber .kpi-value { color: var(--amber); }
+.kpi-card.red   .kpi-value { color: var(--red); }
+
+.kpi-unit { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+
+.kpi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.kpi-delta.up   { background: rgba(34,211,160,.12); color: var(--green); }
+.kpi-delta.down { background: rgba(244,63,94,.12);  color: var(--red); }
+
+/* ── Charts Row ── */
+.charts-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.card-title { font-size: 14px; font-weight: 600; }
+.card-sub   { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+.legend { display:flex; gap:16px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); }
+.legend-dot { width:8px; height:8px; border-radius:50%; }
+
+.chart-wrap { position:relative; }
+
+/* ── Bottom Row ── */
+.bottom-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 16px; }
+
+/* Gauge */
+.gauge-wrap { display:flex; flex-direction:column; align-items:center; padding-top:8px; }
+.gauge-label { font-size:12px; color:var(--text-muted); margin-top:8px; }
+.gauge-value { font-size:22px; font-weight:700; color:var(--green); }
+
+/* Source list */
+.source-list { display:flex; flex-direction:column; gap:12px; }
+.source-item { display:flex; flex-direction:column; gap:6px; }
+.source-top { display:flex; justify-content:space-between; font-size:12px; }
+.source-name { color: var(--text-muted); }
+.source-pct  { color: var(--text-primary); font-weight:600; }
+.bar-track {
+  height:5px; background:var(--bg-card2); border-radius:3px; overflow:hidden;
+}
+.bar-fill {
+  height:100%; border-radius:3px;
+  transition: width 1s ease;
+}
+
+/* Alerts */
+.alert-list { display:flex; flex-direction:column; gap:10px; }
+.alert-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px;
+  border-radius:8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card2);
+}
+.alert-dot { width:8px; height:8px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+.alert-dot.green { background:var(--green); box-shadow:0 0 6px var(--green); }
+.alert-dot.amber { background:var(--amber); box-shadow:0 0 6px var(--amber); }
+.alert-dot.red   { background:var(--red);   box-shadow:0 0 6px var(--red); }
+.alert-text { font-size:12px; color:var(--text-muted); line-height:1.5; }
+.alert-time { font-size:10px; color:var(--text-dim); margin-top:3px; }
+
+/* responsive */
+@media(max-width:1100px){
+  .kpi-row { grid-template-columns: repeat(2,1fr); }
+  .charts-row, .bottom-row { grid-template-columns:1fr; }
+}
+
+@media(max-width:700px){
+  .sidebar { display:none; }
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .content { padding: 16px; }
+  .topbar { padding: 14px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="logo-wrap">
+    <div class="logo-badge">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">أرامكو</div>
+        <div class="logo-sub">مركز التحكم</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">الرئيسية</div>
+    <div class="nav-item active"><span class="nav-icon">📊</span> لوحة التحكم</div>
+    <div class="nav-item"><span class="nav-icon">⚡</span> الاستهلاك</div>
+    <div class="nav-item"><span class="nav-icon">☀️</span> الطاقة الشمسية</div>
+
+    <div class="nav-label" style="margin-top:20px">التقارير</div>
+    <div class="nav-item"><span class="nav-icon">📋</span> التقارير الشهرية</div>
+    <div class="nav-item"><span class="nav-icon">🔔</span> التنبيهات</div>
+    <div class="nav-item"><span class="nav-icon">⚙️</span> الإعدادات</div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="live-dot">
+      <div class="dot"></div>
+      البيانات مباشرة
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">لوحة تحكم الطاقة</div>
+      <div class="topbar-sub">آخر تحديث: اليوم، 14:32 — المنطقة الشرقية</div>
+    </div>
+    <div class="topbar-controls">
+      <button class="filter-btn" onclick="setFilter(this,'يوم')">يوم</button>
+      <button class="filter-btn active" onclick="setFilter(this,'أسبوع')">أسبوع</button>
+      <button class="filter-btn" onclick="setFilter(this,'شهر')">شهر</button>
+      <button class="filter-btn" onclick="setFilter(this,'سنة')">سنة</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card blue">
+        <div class="kpi-top">
+          <div class="kpi-label">إجمالي الإنتاج</div>
+          <div class="kpi-icon">⚡</div>
+        </div>
+        <div class="kpi-value">84.2 <span class="kpi-unit">GWh</span></div>
+        <div class="kpi-delta up">▲ 12% عن الأسبوع الماضي</div>
+      </div>
+
+      <div class="kpi-card green">
+        <div class="kpi-top">
+          <div class="kpi-label">الطاقة المتجددة</div>
+          <div class="kpi-icon">☀️</div>
+        </div>
+        <div class="kpi-value">31.7 <span class="kpi-unit">GWh</span></div>
+        <div class="kpi-delta up">▲ 28% عن الأسبوع الماضي</div>
+      </div>
+
+      <div class="kpi-card amber">
+        <div class="kpi-top">
+          <div class="kpi-label">كفاءة الشبكة</div>
+          <div class="kpi-icon">📈</div>
+        </div>
+        <div class="kpi-value">94.6 <span class="kpi-unit">%</span></div>
+        <div class="kpi-delta down">▼ 1.2% عن الهدف</div>
+      </div>
+
+      <div class="kpi-card red">
+        <div class="kpi-top">
+          <div class="kpi-label">انبعاثات CO₂</div>
+          <div class="kpi-icon">🌿</div>
+        </div>
+        <div class="kpi-value">18.4 <span class="kpi-unit">kt</span></div>
+        <div class="kpi-delta up">▼ 9% تخفيض</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">الإنتاج والاستهلاك الأسبوعي</div>
+            <div class="card-sub">بالجيجاواط/ساعة — مقارنة بالأسبوع الماضي</div>
+          </div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#1a6fff"></div>إنتاج</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#22d3a0"></div>استهلاك</div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(26,111,255,0.3)"></div>الأسبوع الماضي</div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="mainChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">مصادر الطاقة</div>
+            <div class="card-sub">توزيع هذا الأسبوع</div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="donutChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+
+      <!-- Gauge card -->
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">كفاءة الشبكة الآن</div>
+            <div class="card-sub">مؤشر الأداء الفوري</div>
+          </div>
+        </div>
+        <div class="gauge-wrap">
+          <canvas id="gaugeChart" width="180" height="100"></canvas>
+          <div class="gauge-value">94.6%</div>
+          <div class="gauge-label">أعلى من المتوسط بـ 4.6%</div>
+        </div>
+      </div>
+
+      <!-- Sources -->
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">نسبة المصادر</div>
+            <div class="card-sub">توليد هذا الأسبوع</div>
+          </div>
+        </div>
+        <div class="source-list">
+          <div class="source-item">
+            <div class="source-top">
+              <span class="source-name">⛽ نفط وغاز</span>
+              <span class="source-pct">52%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:52%;background:#1a6fff"></div></div>
+          </div>
+          <div class="source-item">
+            <div class="source-top">
+              <span class="source-name">☀️ طاقة شمسية</span>
+              <span class="source-pct">28%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:28%;background:#22d3a0"></div></div>
+          </div>
+          <div class="source-item">
+            <div class="source-top">
+              <span class="source-name">💨 طاقة رياح</span>
+              <span class="source-pct">14%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:14%;background:#f59e0b"></div></div>
+          </div>
+          <div class="source-item">
+            <div class="source-top">
+              <span class="source-name">🔋 تخزين</span>
+              <span class="source-pct">6%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:6%;background:#a78bfa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">التنبيهات الأخيرة</div>
+            <div class="card-sub">آخر 24 ساعة</div>
+          </div>
+        </div>
+        <div class="alert-list">
+          <div class="alert-item">
+            <div class="alert-dot green"></div>
+            <div>
+              <div class="alert-text">الوحدة C-04 تعمل بكفاءة قياسية — 98.2%</div>
+              <div class="alert-time">منذ 18 دقيقة</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot amber"></div>
+            <div>
+              <div class="alert-text">ارتفاع درجة حرارة المحول B-07 — يتم المراقبة</div>
+              <div class="alert-time">منذ 45 دقيقة</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot red"></div>
+            <div>
+              <div class="alert-text">انقطاع مؤقت في خط نقل الشمال — جاري الإصلاح</div>
+              <div class="alert-time">منذ ساعتين</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot green"></div>
+            <div>
+              <div class="alert-text">اكتمل صيانة المحطة الشمسية — عادت للعمل</div>
+              <div class="alert-time">منذ 4 ساعات</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+// Filter buttons
+function setFilter(btn, label) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCharts(label);
+}
+
+// Chart defaults
+Chart.defaults.color = '#6b82a8';
+Chart.defaults.font.family = "'IBM Plex Sans Arabic', sans-serif";
+
+// Main Bar Chart
+const mainCtx = document.getElementById('mainChart').getContext('2d');
+const labels = ['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+
+const mainChart = new Chart(mainCtx, {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'إنتاج',
+        data: [11.2, 12.8, 10.9, 13.4, 12.1, 11.8, 12.0],
+        backgroundColor: 'rgba(26,111,255,0.75)',
+        borderRadius: 5,
+        borderSkipped: false,
+      },
+      {
+        label: 'استهلاك',
+        data: [10.1, 11.4, 10.0, 12.2, 11.3, 10.9, 11.1],
+        backgroundColor: 'rgba(34,211,160,0.65)',
+        borderRadius: 5,
+        borderSkipped: false,
+      },
+      {
+        label: 'الأسبوع الماضي',
+        data: [9.8, 10.9, 9.5, 11.8, 10.7, 10.2, 10.5],
+        type: 'line',
+        borderColor: 'rgba(26,111,255,0.4)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: 'rgba(26,111,255,0.5)',
+        fill: false,
+        tension: 0.4,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: 'rgba(26,111,255,0.07)' }, ticks: { font: { size: 11 } } },
+      y: {
+        grid: { color: 'rgba(26,111,255,0.07)' },
+        ticks: { font: { size: 11 }, callback: v => v + ' GWh' }
+      }
+    }
+  }
+});
+
+// Donut Chart
+const donutCtx = document.getElementById('donutChart').getContext('2d');
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['نفط وغاز','شمسية','رياح','تخزين'],
+    datasets: [{
+      data: [52, 28, 14, 6],
+      backgroundColor: ['#1a6fff','#22d3a0','#f59e0b','#a78bfa'],
+      borderWidth: 0,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '70%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { padding: 14, font: { size: 11 }, boxWidth: 10, boxHeight: 10 }
+      }
+    }
+  }
+});
+
+// Gauge
+function drawGauge(pct) {
+  const c = document.getElementById('gaugeChart');
+  const ctx = c.getContext('2d');
+  const cx = c.width/2, cy = c.height - 10;
+  const r = 75;
+  ctx.clearRect(0,0,c.width,c.height);
+
+  // track
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 0);
+  ctx.strokeStyle = '#1a2540';
+  ctx.lineWidth = 14;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // fill
+  const grad = ctx.createLinearGradient(cx-r, cy, cx+r, cy);
+  grad.addColorStop(0,'#1a6fff');
+  grad.addColorStop(1,'#22d3a0');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, Math.PI + (pct/100)*Math.PI);
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 14;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+}
+drawGauge(94.6);
+
+// Update charts on filter
+function updateCharts(period) {
+  const sets = {
+    'يوم': [[8.1,9.2,10.8,11.4,10.2,9.8,8.9],[7.9,8.8,10.1,10.9,9.7,9.2,8.4]],
+    'أسبوع': [[11.2,12.8,10.9,13.4,12.1,11.8,12.0],[10.1,11.4,10.0,12.2,11.3,10.9,11.1]],
+    'شهر': [[45,52,48,60,55,50,58],[42,49,44,57,51,47,54]],
+    'سنة': [[520,610,580,640,590,620,600],[495,580,552,610,563,590,572]],
+  };
+  if(sets[period]){
+    mainChart.data.datasets[0].data = sets[period][0];
+    mainChart.data.datasets[1].data = sets[period][1];
+    mainChart.update();
+  }
+}
+</script>
+</body>
+</html>

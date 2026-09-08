@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أرامكو للطاقة — الطاقة تبني المستقبل</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --navy:   #060f1e;
+  --navy2:  #0b1a30;
+  --navy3:  #0f2040;
+  --blue:   #0057a8;
+  --blue2:  #0077cc;
+  --gold:   #c8960a;
+  --gold2:  #e8b020;
+  --white:  #ffffff;
+  --text:   #e8f0f8;
+  --muted:  rgba(232,240,248,0.55);
+  --dim:    rgba(232,240,248,0.2);
+  --border: rgba(255,255,255,0.08);
+  --glow-blue: rgba(0,119,204,0.25);
+  --glow-gold: rgba(200,150,10,0.2);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  background: var(--navy);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ════════════════════════════
+   NAV
+════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6%;
+  height: 68px;
+  background: rgba(6,15,30,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: background .3s;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  border-radius: 10px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 20px;
+  box-shadow: 0 0 16px var(--glow-blue);
+}
+
+.logo-text  { font-size: 16px; font-weight: 700; }
+.logo-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+
+.nav-links a {
+  padding: 7px 16px;
+  font-size: 13px;
+  color: var(--muted);
+  border-radius: 7px;
+  transition: all .2s;
+}
+
+.nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.07); }
+
+.nav-cta {
+  padding: 9px 22px;
+  background: var(--blue2);
+  color: var(--white) !important;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all .2s !important;
+  box-shadow: 0 4px 16px var(--glow-blue);
+}
+
+.nav-cta:hover { background: #0088ee !important; transform: translateY(-1px); box-shadow: 0 6px 24px var(--glow-blue) !important; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all .3s;
+}
+
+/* ════════════════════════════
+   HERO
+════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 100px 6% 60px;
+}
+
+/* animated background */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 50%, rgba(0,87,168,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(200,150,10,0.1) 0%, transparent 55%),
+    linear-gradient(160deg, var(--navy) 0%, var(--navy2) 50%, var(--navy3) 100%);
+}
+
+/* grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* floating orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: float 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.orb1 { width:400px; height:400px; background:rgba(0,119,204,0.12); top:-100px; right:-100px; animation-delay:0s; }
+.orb2 { width:300px; height:300px; background:rgba(200,150,10,0.08); bottom:-80px; left:-80px; animation-delay:3s; }
+.orb3 { width:200px; height:200px; background:rgba(0,119,204,0.08); top:40%; left:30%; animation-delay:6s; }
+
+@keyframes float {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%     { transform: translateY(-30px) scale(1.05); }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: rgba(0,119,204,0.15);
+  border: 1px solid rgba(0,119,204,0.35);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #7ec8f4;
+  margin-bottom: 22px;
+}
+
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  background: #7ec8f4;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.hero-title {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -.02em;
+}
+
+.hero-title .line2 {
+  background: linear-gradient(90deg, var(--blue2), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 480px;
+  line-height: 1.75;
+  margin-bottom: 36px;
+  font-weight: 300;
+}
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+.btn-primary {
+  padding: 13px 28px;
+  background: var(--blue2);
+  color: var(--white);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all .25s;
+  box-shadow: 0 6px 24px var(--glow-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover { background:#0088ee; transform:translateY(-2px); box-shadow:0 10px 32px var(--glow-blue); }
+
+.btn-ghost {
+  padding: 13px 28px;
+  background: transparent;
+  color: var(--text);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: all .25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ghost:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); }
+
+.hero-stats {
+  display: flex;
+  gap: 28px;
+  margin-top: 44px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.h-stat-num {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.h-stat-num span { color: var(--blue2); font-size: 16px; }
+.h-stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* Hero visual */
+.hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.energy-orb {
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(0,119,204,0.35), rgba(0,40,90,0.6) 60%, transparent);
+  border: 1px solid rgba(0,119,204,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 80px rgba(0,119,204,0.15), inset 0 0 60px rgba(0,119,204,0.1);
+  animation: orbPulse 4s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  0%,100% { box-shadow: 0 0 80px rgba(0,119,204,0.15), inset 0 0 60px rgba(0,119,204,0.1); }
+  50%      { box-shadow: 0 0 120px rgba(0,119,204,0.25), inset 0 0 80px rgba(0,119,204,0.15); }
+}
+
+.orb-icon { font-size: 80px; filter: drop-shadow(0 0 30px rgba(0,119,204,0.6)); }
+
+/* orbiting rings */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0,119,204,0.2);
+  animation: spin linear infinite;
+}
+
+.ring1 { width:420px; height:420px; animation-duration:20s; }
+.ring2 { width:500px; height:500px; border-color:rgba(200,150,10,0.12); animation-duration:30s; animation-direction:reverse; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* floating badges on orb */
+.float-badge {
+  position: absolute;
+  background: rgba(11,26,48,0.9);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  animation: float 6s ease-in-out infinite;
+}
+
+.fb1 { top:10%; right:-20px; animation-delay:0s; }
+.fb2 { bottom:15%; left:-20px; animation-delay:2s; }
+.fb3 { top:50%; right:-30px; animation-delay:4s; }
+
+.fb-val  { font-size:16px; font-weight:700; color:var(--blue2); }
+.fb-lbl  { font-size:10px; color:var(--muted); margin-top:2px; }
+
+/* ════════════════════════════
+   TICKER
+════════════════════════════ */
+.ticker {
+  background: var(--navy2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  overflow: hidden;
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 60px;
+  animation: ticker 25s linear infinite;
+  width: max-content;
+}
+
+@keyframes ticker { to { transform: translateX(-50%); } }
+
+.tick-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tick-icon { font-size: 16px; }
+.tick-val  { color: var(--white); font-weight: 600; }
+.tick-up   { color: #22d3a0; font-size: 11px; }
+.tick-down { color: #f43f5e; font-size: 11px; }
+
+/* ════════════════════════════
+   SERVICES
+════════════════════════════ */
+.section { padding: 88px 6%; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--blue2);
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -.02em;
+}
+
+.section-desc {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 560px;
+  margin-bottom: 52px;
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+.services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+
+.svc-card {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all .3s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.svc-card::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: linear-gradient(135deg, rgba(0,119,204,0.06), transparent);
+  opacity:0;
+  transition: opacity .3s;
+}
+
+.svc-card:hover { border-color:rgba(0,119,204,0.4); transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.3); }
+.svc-card:hover::before { opacity:1; }
+
+.svc-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.svc-card:nth-child(1) .svc-icon { background:rgba(0,119,204,0.15); }
+.svc-card:nth-child(2) .svc-icon { background:rgba(34,211,160,0.12); }
+.svc-card:nth-child(3) .svc-icon { background:rgba(200,150,10,0.12); }
+.svc-card:nth-child(4) .svc-icon { background:rgba(168,85,247,0.12); }
+.svc-card:nth-child(5) .svc-icon { background:rgba(244,63,94,0.12); }
+.svc-card:nth-child(6) .svc-icon { background:rgba(14,165,233,0.12); }
+
+.svc-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+.svc-desc  { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.svc-link  { font-size: 13px; color: var(--blue2); display:flex; align-items:center; gap:5px; }
+
+/* ════════════════════════════
+   NUMBERS / IMPACT
+════════════════════════════ */
+.impact { padding: 80px 6%; background: var(--navy2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.impact-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 2fr; gap:80px; align-items:center; }
+.impact-left .section-desc { margin-bottom: 28px; }
+
+.impact-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+
+.impact-card {
+  background: rgba(6,15,30,0.6);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  transition: border-color .2s;
+}
+
+.impact-card:hover { border-color: rgba(0,119,204,0.3); }
+
+.impact-num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.impact-num .unit { font-size: 1.2rem; color: var(--blue2); }
+.impact-lbl { font-size: 12px; color: var(--muted); }
+.impact-delta { font-size: 11px; margin-top:8px; display:inline-block; padding:2px 8px; border-radius:10px; }
+.delta-g { background:rgba(34,211,160,0.12); color:#22d3a0; }
+.delta-b { background:rgba(0,119,204,0.12); color:#60b8f4; }
+
+/* ════════════════════════════
+   PROJECTS
+════════════════════════════ */
+.projects-grid { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:20px; }
+
+.proj-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--navy2);
+  transition: all .3s;
+  cursor: pointer;
+}
+
+.proj-card:hover { transform:translateY(-4px); border-color:rgba(0,119,204,0.4); box-shadow:0 16px 48px rgba(0,0,0,0.4); }
+
+.proj-img {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  position: relative;
+}
+
+.proj-card:nth-child(1) .proj-img { background:linear-gradient(135deg,#0b2a50,#0057a8); height:220px; }
+.proj-card:nth-child(2) .proj-img { background:linear-gradient(135deg,#0d2e1a,#0a5c32); }
+.proj-card:nth-child(3) .proj-img { background:linear-gradient(135deg,#1a1a0a,#5a4000); }
+
+.proj-status {
+  position:absolute;
+  top:14px; right:14px;
+  font-size:10px;
+  padding:3px 10px;
+  border-radius:20px;
+  font-weight:600;
+}
+
+.status-active { background:rgba(34,211,160,0.2); color:#22d3a0; border:1px solid rgba(34,211,160,0.3); }
+.status-build  { background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+.status-plan   { background:rgba(148,163,184,0.2); color:#94a3b8; border:1px solid rgba(148,163,184,0.3); }
+
+.proj-body { padding:20px; }
+.proj-title { font-size:15px; font-weight:700; margin-bottom:8px; }
+.proj-desc  { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:14px; }
+.proj-meta  { display:flex; justify-content:space-between; font-size:11px; color:var(--dim); }
+
+/* ════════════════════════════
+   VISION 2030
+════════════════════════════ */
+.vision {
+  padding: 88px 6%;
+  background: linear-gradient(160deg, var(--navy3) 0%, var(--navy2) 100%);
+  border-top:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+
+.vision::before {
+  content:'2030';
+  position:absolute;
+  font-size:22vw;
+  font-weight:900;
+  color:rgba(255,255,255,0.015);
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  letter-spacing:-.05em;
+}
+
+.vision-inner { max-width:1200px; margin:0 auto; }
+
+.vision-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:48px; }
+
+.vision-card {
+  background: rgba(6,15,30,0.7);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  text-align:center;
+  transition: all .3s;
+  position:relative;
+  overflow:hidden;
+}
+
+.vision-card::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:0; right:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--blue2), var(--gold2));
+  transform:scaleX(0);
+  transition:transform .3s;
+  transform-origin:left;
+}
+
+.vision-card:hover::after { transform:scaleX(1); }
+.vision-card:hover { border-color:rgba(0,119,204,0.3); transform:translateY(-3px); }
+
+.vision-icon { font-size:32px; margin-bottom:14px; }
+.vision-pct  { font-size:2rem; font-weight:800; color:var(--white); margin-bottom:6px; }
+.vision-pct span { color:var(--blue2); font-size:1.1rem; }
+.vision-lbl  { font-size:12px; color:var(--muted); line-height:1.5; }
+
+/* ════════════════════════════
+   CTA
+════════════════════════════ */
+.cta-section {
+  padding: 88px 6%;
+  text-align: center;
+  background: var(--navy);
+  border-top:1px solid var(--border);
+}
+
+.cta-inner { max-width:640px; margin:0 auto; }
+
+.cta-title {
+  font-size: clamp(1.8rem,3.5vw,2.6rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing:-.02em;
+}
+
+.cta-title span { color: var(--blue2); }
+.cta-desc { font-size:15px; color:var(--muted); margin-bottom:36px; font-weight:300; line-height:1.75; }
+
+.cta-form {
+  display: flex;
+  gap: 10px;
+  max-width: 440px;
+  margin: 0 auto 20px;
+}
+
+.cta-input {
+  flex: 1;
+  padding: 13px 18px;
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s;
+}
+
+.cta-input:focus { border-color: var(--blue2); }
+.cta-input::placeholder { color: var(--dim); }
+
+.cta-note { font-size:11px; color:var(--dim); }
+
+/* ════════════════════════════
+   FOOTER
+════════════════════════════ */
+footer {
+  background: var(--navy2);
+  border-top: 1px solid var(--border);
+  padding: 52px 6% 28px;
+}
+
+.footer-inner { max-width:1200px; margin:0 auto; }
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer-brand-desc { font-size:13px; color:var(--muted); line-height:1.7; margin:16px 0 20px; }
+
+.social-row { display:flex; gap:10px; }
+
+.social-btn {
+  width:36px; height:36px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px;
+  cursor:pointer;
+  transition:all .2s;
+}
+
+.social-btn:hover { background:var(--blue2); border-color:var(--blue2); }
+
+.footer-col-title { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+
+.footer-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-links a { font-size:13px; color:var(--muted); transition:color .2s; }
+.footer-links a:hover { color:var(--white); }
+
+.footer-bottom {
+  border-top:1px solid var(--border);
+  padding-top:24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  font-size:12px;
+  color:var(--dim);
+}
+
+/* ════════════════════════════
+   RESPONSIVE
+════════════════════════════ */
+@media(max-width:960px){
+  .hero-inner     { grid-template-columns:1fr; text-align:center; }
+  .hero-visual    { display:none; }
+  .hero-desc      { margin:0 auto 36px; }
+  .hero-actions   { justify-content:center; }
+  .hero-stats     { justify-content:center; }
+  .services-grid  { grid-template-columns:1fr 1fr; }
+  .projects-grid  { grid-template-columns:1fr 1fr; }
+  .vision-grid    { grid-template-columns:1fr 1fr; }
+  .impact-inner   { grid-template-columns:1fr; gap:40px; }
+  .footer-top     { grid-template-columns:1fr 1fr; gap:32px; }
+  .nav-links      { display:none; }
+  .hamburger      { display:flex; }
+}
+
+@media(max-width:600px){
+  .services-grid  { grid-template-columns:1fr; }
+  .projects-grid  { grid-template-columns:1fr; }
+  .vision-grid    { grid-template-columns:1fr 1fr; }
+  .impact-grid    { grid-template-columns:1fr 1fr; }
+  .footer-top     { grid-template-columns:1fr; }
+  .cta-form       { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="logo-icon">⚡</div>
+    <div>
+      <div class="logo-text">أرامكو للطاقة</div>
+      <div class="logo-sub">Saudi Energy Corp.</div>
+    </div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#services">خدماتنا</a></li>
+    <li><a href="#projects">مشاريعنا</a></li>
+    <li><a href="#vision">رؤية 2030</a></li>
+    <li><a href="#contact">تواصل معنا</a></li>
+    <li><a href="#contact" class="nav-cta">ابدأ معنا</a></li>
+  </ul>
+
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        رائدون في قطاع الطاقة بالمملكة منذ 1988
+      </div>
+
+      <h1 class="hero-title">
+        الطاقة التي تبني<br>
+        <span class="line2">مستقبل المملكة</span>
+      </h1>
+
+      <p class="hero-desc">
+        نوفّر حلول طاقة متكاملة — شمسية، ريحية، وهيدروجين أخضر — تدعم رؤية 2030 نحو اقتصاد أنظف وأكثر استدامة.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+          ابدأ مشروعك ←
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">
+          ▶ شاهد مشاريعنا
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <div class="h-stat-num">84<span>+</span></div>
+          <div class="h-stat-label">مشروع مكتمل</div>
+        </div>
+        <div>
+          <div class="h-stat-num">12<span>GW</span></div>
+          <div class="h-stat-label">طاقة مركّبة</div>
+        </div>
+        <div>
+          <div class="h-stat-num">36</div>
+          <div class="h-stat-label">سنة خبرة</div>
+        </div>
+        <div>
+          <div class="h-stat-num">98<span>%</span></div>
+          <div class="h-stat-label">رضا العملاء</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="ring ring1"></div>
+      <div class="ring ring2"></div>
+      <div class="energy-orb">
+        <div class="orb-icon">⚡</div>
+      </div>
+      <div class="float-badge fb1">
+        <div class="fb-val">+31%</div>
+        <div class="fb-lbl">نمو الطاقة الشمسية</div>
+      </div>
+      <div class="float-badge fb2">
+        <div class="fb-val">2030</div>
+        <div class="fb-lbl">هدف رؤية المملكة</div>
+      </div>
+      <div class="float-badge fb3">
+        <div class="fb-val">Zero CO₂</div>
+        <div class="fb-lbl">هيدروجين أخضر</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="tick-item"><span class="tick-icon">☀️</span> الطاقة الشمسية <span class="tick-val">23.6 GW</span> <span class="tick-up">▲ 31%</span></div>
+    <div class="tick-item"><span class="tick-icon">💨</span> طاقة الرياح <span class="tick-val">400 MW</span> <span class="tick-up">▲ 18%</span></div>
+    <div class="tick-item"><span class="tick-icon">💧</span> هيدروجين أخضر <span class="tick-val">600 T/day</span> <span class="tick-up">▲ نيوم 2026</span></div>
+    <div class="tick-item"><span class="tick-icon">🌿</span> تخفيض CO₂ <span class="tick-val">68 Mt</span> <span class="tick-up">▲ الهدف 2030</span></div>
+    <div class="tick-item"><span class="tick-icon">⚡</span> إجمالي الإنتاج <span class="tick-val">412 TWh</span> <span class="tick-up">▲ 8.4%</span></div>
+    <div class="tick-item"><span class="tick-icon">🔋</span> مشاريع التخزين <span class="tick-val">16+</span> <span class="tick-up">▲ نشطة</span></div>
+    <!-- duplicate for infinite scroll -->
+    <div class="tick-item"><span class="tick-icon">☀️</span> الطاقة الشمسية <span class="tick-val">23.6 GW</span> <span class="tick-up">▲ 31%</span></div>
+    <div class="tick-item"><span class="tick-icon">💨</span> طاقة الرياح <span class="tick-val">400 MW</span> <span class="tick-up">▲ 18%</span></div>
+    <div class="tick-item"><span class="tick-icon">💧</span> هيدروجين أخضر <span class="tick-val">600 T/day</span> <span class="tick-up">▲ نيوم 2026</span></div>
+    <div class="tick-item"><span class="tick-icon">🌿</span> تخفيض CO₂ <span class="tick-val">68 Mt</span> <span class="tick-up">▲ الهدف 2030</span></div>
+    <div class="tick-item"><span class="tick-icon">⚡</span> إجمالي الإنتاج <span class="tick-val">412 TWh</span> <span class="tick-up">▲ 8.4%</span></div>
+    <div class="tick-item"><span class="tick-icon">🔋</span> مشاريع التخزين <span class="tick-val">16+</span> <span class="tick-up">▲ نشطة</span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-inner">
+    <div class="section-tag">⚡ خدماتنا</div>
+    <h2 class="section-title">حلول طاقة متكاملة</h2>
+    <p class="section-desc">نقدم طيفاً شاملاً من خدمات الطاقة المتجددة والتقليدية، مصممة خصيصاً لتلبية احتياجات السوق السعودي.</p>
+
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-icon">☀️</div>
+        <div class="svc-title">الطاقة الشمسية</div>
+        <div class="svc-desc">تصميم وتركيب وتشغيل أنظمة الطاقة الشمسية للمشاريع السكنية والتجارية والصناعية بأحدث التقنيات.</div>
+        <div class="svc-link">اعرف أكثر ←</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">💨</div>
+        <div class="svc-title">طاقة الرياح</div>
+        <div class="svc-desc">مشاريع توربينات الرياح البرية والبحرية مع دراسات الجدوى الشاملة وخدمات الصيانة الدورية.</div>
+        <div class="svc-link">اعرف أكثر ←</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">💧</div>
+        <div class="svc-title">الهيدروجين الأخضر</div>
+        <div class="svc-desc">تقنيات تحليل الماء وإنتاج الهيدروجين النظيف — المصدر القادم للطاقة عبر الصناعة والنقل.</div>
+        <div class="svc-link">اعرف أكثر ←</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🔋</div>
+        <div class="svc-title">تخزين الطاقة</div>
+        <div class="svc-desc">أنظمة بطاريات متطورة وتخزين حراري تضمن استمرارية الإمداد وتقلل الاعتماد على الشبكة.</div>
+        <div class="svc-link">اعرف أكثر ←</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📊</div>
+        <div class="svc-title">إدارة الطاقة</div>
+        <div class="svc-desc">منصات ذكية لمراقبة وتحسين استهلاك الطاقة بالوقت الفعلي مع تقارير تفصيلية وتنبيهات فورية.</div>
+        <div class="svc-link">اعرف أكثر ←</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🏗️</div>
+        <div class="svc-title">EPC المتكامل</div>
+        <div class="svc-desc">تسليم مشاريع الطاقة مفتاحاً باليد — من الهندسة والمشتريات حتى البناء والتشغيل والصيانة.</div>
+        <div class="svc-link">اعرف أكثر ←</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<div class="impact">
+  <div class="impact-inner">
+    <div class="impact-left">
+      <div class="section-tag">📈 أثرنا</div>
+      <h2 class="section-title">أرقام تتحدث عن نفسها</h2>
+      <p class="section-desc">في 36 عاماً، حققنا إنجازات حقيقية تدعم مسيرة المملكة نحو الاستدامة.</p>
+      <button class="btn-primary" style="font-size:13px;padding:10px 20px">تقرير الاستدامة ←</button>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-num">12<span class="unit">GW</span></div>
+        <div class="impact-lbl">طاقة مركّبة إجمالية</div>
+        <div class="impact-delta delta-g">▲ 23% هذا العام</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">4.2<span class="unit">Mt</span></div>
+        <div class="impact-lbl">CO₂ تم تخفيضه</div>
+        <div class="impact-delta delta-g">▲ يعادل 18M شجرة</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">84<span class="unit">+</span></div>
+        <div class="impact-lbl">مشروع منجز</div>
+        <div class="impact-delta delta-b">في 12 منطقة سعودية</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">3,200<span class="unit">+</span></div>
+        <div class="impact-lbl">وظيفة سعودية</div>
+        <div class="impact-delta delta-g">▲ 68% سعودة</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="section-inner">
+    <div class="section-tag">🏗️ مشاريعنا</div>
+    <h2 class="section-title">أبرز مشاريعنا</h2>
+    <p class="section-desc">من الرياض إلى نيوم — نبني البنية التحتية للطاقة النظيفة في أرجاء المملكة.</p>
+
+    <div class="projects-grid">
+      <div class="proj-card">
+        <div class="proj-img">☀️<span class="proj-status status-active">نشط</span></div>
+        <div class="proj-body">
+          <div class="proj-title">محطة الرياض الشمسية</div>
+          <div class="proj-desc">أكبر محطة طاقة شمسية في المنطقة الوسطى بطاقة 2.4 جيجاواط — تخدم 600 ألف منزل سعودي.</div>
+          <div class="proj-meta"><span>المنطقة الوسطى</span><span>2.4 GW</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-img">💨<span class="proj-status status-build">قيد الإنشاء</span></div>
+        <div class="proj-body">
+          <div class="proj-title">مزرعة رياح تبوك</div>
+          <div class="proj-desc">120 توربينة ريحية بارتفاع 140م في منطقة تبوك ذات أعلى إمكانات رياح في المملكة.</div>
+          <div class="proj-meta"><span>تبوك</span><span>800 MW</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-img">💧<span class="proj-status status-plan">مخطط</span></div>
+        <div class="proj-body">
+          <div class="proj-title">مصنع الهيدروجين الأخضر</div>
+          <div class="proj-desc">بالشراكة مع نيوم — إنتاج 300 طن هيدروجين أخضر يومياً لتغذية قطاعي النقل والصناعة.</div>
+          <div class="proj-meta"><span>نيوم</span><span>300 T/day</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION 2030 -->
+<section class="vision" id="vision">
+  <div class="vision-inner">
+    <div class="section-tag">🇸🇦 رؤية 2030</div>
+    <h2 class="section-title">شركاء في رؤية المملكة</h2>
+    <p class="section-desc" style="font-size:15px;color:var(--muted);font-weight:300;line-height:1.75;max-width:560px;margin-bottom:0">ملتزمون بتحقيق أهداف رؤية 2030 في قطاع الطاقة — من خفض الانبعاثات إلى رفع حصة الطاقة المتجددة.</p>
+
+    <div class="vision-grid">
+      <div class="vision-card">
+        <div class="vision-icon">☀️</div>
+        <div class="vision-pct">58<span>%</span></div>
+        <div class="vision-lbl">هدف حصة الطاقة المتجددة بحلول 2030</div>
+      </div>
+      <div class="vision-card">
+        <div class="vision-icon">🌿</div>
+        <div class="vision-pct">278<span>Mt</span></div>
+        <div class="vision-lbl">هدف خفض انبعاثات CO₂ سنوياً بحلول 2030</div>
+      </div>
+      <div class="vision-card">
+        <div class="vision-icon">💡</div>
+        <div class="vision-pct">130<span>GW</span></div>
+        <div class="vision-lbl">طاقة شمسية وريحية مستهدفة بحلول 2030</div>
+      </div>
+      <div class="vision-card">
+        <div class="vision-icon">🏭</div>
+        <div class="vision-pct">70<span>%</span></div>
+        <div class="vision-lbl">هدف نسبة المحتوى المحلي في مشاريع الطاقة</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div class="section-tag" style="justify-content:center">📬 تواصل معنا</div>
+    <h2 class="cta-title">جاهز تبدأ <span>مشروع الطاقة</span> بتاعك؟</h2>
+    <p class="cta-desc">فريقنا من الخبراء جاهز للرد خلال 24 ساعة. أدخل بريدك واحنا نتواصل معك.</p>
+    <div class="cta-form">
+      <input class="cta-input" type="email" placeholder="بريدك الإلكتروني">
+      <button class="btn-primary" style="white-space:nowrap">تواصل معنا</button>
+    </div>
+    <div class="cta-note">✓ لا رسائل مزعجة — فقط معلومات مفيدة عن مشروعك</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="nav-logo">
+          <div class="logo-icon">⚡</div>
+          <div>
+            <div class="logo-text">أرامكو للطاقة</div>
+            <div class="logo-sub">Saudi Energy Corp.</div>
+          </div>
+        </div>
+        <p class="footer-brand-desc">نبني مستقبل الطاقة في المملكة العربية السعودية — شمسية، ريحية، وهيدروجين أخضر منذ 1988.</p>
+        <div class="social-row">
+          <div class="social-btn">𝕏</div>
+          <div class="social-btn">in</div>
+          <div class="social-btn">▶</div>
+          <div class="social-btn">📘</div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">الخدمات</div>
+        <ul class="footer-links">
+          <li><a>الطاقة الشمسية</a></li>
+          <li><a>طاقة الرياح</a></li>
+          <li><a>الهيدروجين الأخضر</a></li>
+          <li><a>تخزين الطاقة</a></li>
+          <li><a>EPC المتكامل</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">الشركة</div>
+        <ul class="footer-links">
+          <li><a>من نحن</a></li>
+          <li><a>مشاريعنا</a></li>
+          <li><a>رؤية 2030</a></li>
+          <li><a>الاستدامة</a></li>
+          <li><a>الوظائف</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">تواصل</div>
+        <ul class="footer-links">
+          <li><a>📍 الرياض، المملكة</a></li>
+          <li><a>📞 +966 11 000 0000</a></li>
+          <li><a>✉️ info@energy.sa</a></li>
+          <li><a>الدعم الفني</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 أرامكو للطاقة. جميع الحقوق محفوظة.</span>
+      <span>سياسة الخصوصية · الشروط والأحكام</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').style.background =
+    window.scrollY > 40
+      ? 'rgba(6,15,30,0.97)'
+      : 'rgba(6,15,30,0.85)';
+});
+
+// Mobile menu
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  if (links.style.display === 'flex') {
+    links.style.display = 'none';
+  } else {
+    links.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:68px;left:0;right:0;background:rgba(6,15,30,0.98);padding:20px;gap:8px;border-bottom:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(16px);';
+    links.querySelectorAll('a').forEach(a => {
+      a.style.cssText = 'padding:12px 16px;display:block;font-size:15px;';
+    });
+  }
+}
+
+// Smooth counter animation
+function animateCounters() {
+  document.querySelectorAll('.impact-num').forEach(el => {
+    const text = el.textContent;
+    const num  = parseFloat(text);
+    if (isNaN(num)) return;
+    const unit = text.replace(/[\d.]/g,'');
+    let start = 0;
+    const step = num / 40;
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= num) { start = num; clearInterval(timer); }
+      el.innerHTML = (Number.isInteger(num) ? Math.round(start) : start.toFixed(1)) + `<span class="unit">${unit}</span>`;
+    }, 30);
+  });
+}
+
+// Intersection observer for counter
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCounters(); observer.disconnect(); } });
+}, { threshold: 0.3 });
+
+const impactSection = document.querySelector('.impact');
+if (impactSection) observer.observe(impactSection);
+</script>
+</body>
+</html>

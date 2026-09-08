@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الطاقة — Energy Portal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #f0f4f8;
+  --bg2: #ffffff;
+  --navy: #0a1628;
+  --navy2: #0f2040;
+  --accent: #005fa3;
+  --accent2: #0077cc;
+  --gold: #c8960a;
+  --gold-light: #fef3c7;
+  --green: #0d7a55;
+  --green-light: #d1fae5;
+  --text: #0a1628;
+  --muted: #4a6080;
+  --dim: #8fa3bc;
+  --border: #d4dde8;
+  --card-shadow: 0 2px 16px rgba(10,22,40,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html[dir="ltr"] { font-family: 'Inter', sans-serif; }
+html[dir="rtl"] { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+
+body { background: var(--bg); color: var(--text); min-height:100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--navy);
+  color: #fff;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-mark {
+  width: 34px; height: 34px;
+  background: var(--accent2);
+  border-radius: 8px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 18px;
+}
+
+.logo-name { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.logo-sub  { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+
+.topbar-nav { display: flex; align-items: center; gap: 4px; }
+
+.tnav-btn {
+  padding: 6px 14px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .2s;
+}
+
+.tnav-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.tnav-btn.active { color: #fff; background: rgba(255,255,255,0.12); }
+
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+.lang-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.lang-btn {
+  padding: 5px 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.lang-btn.active { background: var(--accent2); color: #fff; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--navy2);
+  color: #fff;
+  padding: 64px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content:'';
+  position:absolute;
+  top:-100px; left:-100px;
+  width:500px; height:500px;
+  background: radial-gradient(circle, rgba(0,119,204,0.2) 0%, transparent 65%);
+  pointer-events:none;
+}
+
+.hero::after {
+  content:'';
+  position:absolute;
+  bottom:-80px; right:-80px;
+  width:400px; height:400px;
+  background: radial-gradient(circle, rgba(200,150,10,0.15) 0%, transparent 65%);
+  pointer-events:none;
+}
+
+.hero-inner { max-width: 1100px; margin: 0 auto; position:relative; z-index:1; }
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: rgba(0,119,204,0.2);
+  border: 1px solid rgba(0,119,204,0.4);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #7ec8f4;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  max-width: 640px;
+  margin-bottom: 16px;
+}
+
+.hero h1 span { color: #60b8f8; }
+
+.hero-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.hero-stat-num { font-size: 2rem; font-weight: 700; color: #fff; }
+.hero-stat-num span { color: #60b8f8; font-size: 1.2rem; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 3px; }
+
+/* ── MAIN ── */
+.main { max-width: 1100px; margin: 0 auto; padding: 40px; }
+
+/* ── SECTION TITLE ── */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.section-title { font-size: 18px; font-weight: 700; color: var(--text); }
+.section-sub   { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.see-all {
+  font-size: 13px;
+  color: var(--accent2);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+
+.tab {
+  padding: 8px 20px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { background: var(--navy); color: #fff; }
+
+.tab-panel { display: none; }
+.tab-panel.show { display: block; }
+
+/* ── ENERGY CARDS ── */
+.energy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.e-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: transform .2s, box-shadow .2s;
+  cursor: pointer;
+}
+
+.e-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(10,22,40,0.12); }
+
+.e-card-header {
+  padding: 24px 24px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.e-card-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 24px;
+}
+
+.e-card.solar   .e-card-icon { background: #fef9c3; }
+.e-card.wind    .e-card-icon { background: #dbeafe; }
+.e-card.hydro   .e-card-icon { background: #d1fae5; }
+.e-card.nuclear .e-card-icon { background: #ede9fe; }
+.e-card.oil     .e-card-icon { background: #fee2e2; }
+.e-card.gas     .e-card-icon { background: #fef3c7; }
+
+.e-badge {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-gold  { background: var(--gold-light); color: var(--gold); }
+.badge-gray  { background: #f1f5f9; color: #475569; }
+
+.e-card-title { font-size: 16px; font-weight: 700; padding: 0 24px 8px; }
+.e-card-desc  { font-size: 13px; color: var(--muted); padding: 0 24px 20px; line-height: 1.6; }
+
+.e-card-footer {
+  border-top: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.e-card-stat-label { font-size: 11px; color: var(--dim); }
+.e-card-stat-val   { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 2px; }
+
+/* ── NEWS GRID ── */
+.news-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+
+.news-main {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.news-img {
+  height: 200px;
+  background: linear-gradient(135deg, var(--navy), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+}
+
+.news-body { padding: 24px; }
+
+.news-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.news-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+.news-desc  { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.news-meta  { font-size: 11px; color: var(--dim); }
+
+.news-list { display: flex; flex-direction: column; gap: 14px; }
+
+.news-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.news-item:hover { border-color: var(--accent2); }
+
+.news-item-tag   { font-size: 10px; color: var(--dim); margin-bottom: 6px; }
+.news-item-title { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+.news-item-meta  { font-size: 11px; color: var(--dim); }
+
+/* ── STATS ROW ── */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--card-shadow);
+}
+
+.stat-icon { font-size: 20px; margin-bottom: 10px; }
+.stat-num  { font-size: 24px; font-weight: 700; color: var(--text); }
+.stat-lbl  { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.stat-delta { font-size: 11px; margin-top: 8px; padding: 2px 8px; border-radius: 10px; display:inline-block; }
+.delta-up   { background: var(--green-light); color: var(--green); }
+.delta-down { background: #fee2e2; color: #dc2626; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.5);
+  padding: 32px 40px;
+  margin-top: 60px;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: rgba(255,255,255,0.4); font-size: 12px; text-decoration: none; transition:.2s; }
+.footer-links a:hover { color: #fff; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,22,40,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal {
+  background: var(--bg2);
+  border-radius: 16px;
+  width: min(560px, 92vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(10,22,40,0.35);
+}
+
+.modal-head {
+  padding: 24px 28px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-title { font-size: 18px; font-weight: 700; }
+.modal-close {
+  width:32px; height:32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items:center; justify-content:center;
+  color: var(--muted);
+  transition: all .2s;
+}
+.modal-close:hover { background: var(--bg); }
+.modal-body { padding: 20px 28px 28px; font-size: 14px; color: var(--muted); line-height: 1.8; }
+.modal-stat-row { display:flex; gap:16px; margin: 16px 0; flex-wrap:wrap; }
+.modal-stat { background: var(--bg); border-radius:8px; padding:12px 16px; flex:1; min-width:120px; }
+.modal-stat-v { font-size:18px; font-weight:700; color:var(--text); }
+.modal-stat-l { font-size:11px; color:var(--dim); margin-top:3px; }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .energy-grid { grid-template-columns: 1fr 1fr; }
+  .news-grid   { grid-template-columns: 1fr; }
+  .stats-row   { grid-template-columns: 1fr 1fr; }
+  .topbar-nav  { display: none; }
+}
+
+@media(max-width:600px){
+  .topbar, .hero, .main, .footer { padding-left:16px; padding-right:16px; }
+  .energy-grid { grid-template-columns: 1fr; }
+  .stats-row   { grid-template-columns: 1fr 1fr; }
+  .hero-stats  { gap:24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark">⚡</div>
+    <div>
+      <div class="logo-name" data-ar="بوابة الطاقة" data-en="Energy Portal">بوابة الطاقة</div>
+      <div class="logo-sub" data-ar="المملكة العربية السعودية" data-en="Kingdom of Saudi Arabia">المملكة العربية السعودية</div>
+    </div>
+  </div>
+
+  <nav class="topbar-nav">
+    <button class="tnav-btn active" onclick="setTab(this,'home')" data-ar="الرئيسية" data-en="Home">الرئيسية</button>
+    <button class="tnav-btn" onclick="setTab(this,'types')" data-ar="مصادر الطاقة" data-en="Energy Sources">مصادر الطاقة</button>
+    <button class="tnav-btn" onclick="setTab(this,'news')" data-ar="الأخبار" data-en="News">الأخبار</button>
+    <button class="tnav-btn" onclick="setTab(this,'vision')" data-ar="رؤية 2030" data-en="Vision 2030">رؤية 2030</button>
+  </nav>
+
+  <div class="topbar-actions">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ar',this)">عربي</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span>🌍</span>
+      <span data-ar="مستقبل الطاقة في المملكة" data-en="The Future of Energy in Saudi Arabia">مستقبل الطاقة في المملكة</span>
+    </div>
+    <h1 data-ar="بوابتك الشاملة <span>لمصادر الطاقة</span>" data-en="Your Complete Portal for <span>Energy Sources</span>">
+      بوابتك الشاملة <span>لمصادر الطاقة</span>
+    </h1>
+    <p data-ar="تعرّف على أنواع الطاقة المختلفة، وتابع أحدث الأخبار، واستكشف خطط المملكة نحو مستقبل طاقة نظيف ومستدام في إطار رؤية 2030."
+       data-en="Learn about different energy sources, follow the latest news, and explore the Kingdom's plans toward a clean and sustainable energy future within Vision 2030.">
+      تعرّف على أنواع الطاقة المختلفة، وتابع أحدث الأخبار، واستكشف خطط المملكة نحو مستقبل طاقة نظيف ومستدام في إطار رؤية 2030.
+    </p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">58<span>%</span></div>
+        <div class="hero-stat-label" data-ar="هدف الطاقة المتجددة 2030" data-en="Renewable Energy Target 2030">هدف الطاقة المتجددة 2030</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">130<span>GW</span></div>
+        <div class="hero-stat-label" data-ar="طاقة شمسية مخططة" data-en="Planned Solar Capacity">طاقة شمسية مخططة</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">16<span>+</span></div>
+        <div class="hero-stat-label" data-ar="مشروع طاقة متجددة نشط" data-en="Active Renewable Projects">مشروع طاقة متجددة نشط</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-num">412 <span style="font-size:14px;color:var(--muted)">TWh</span></div>
+      <div class="stat-lbl" data-ar="إجمالي الإنتاج 2024" data-en="Total Production 2024">إجمالي الإنتاج 2024</div>
+      <div class="stat-delta delta-up">▲ 8.4%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">☀️</div>
+      <div class="stat-num">23.6 <span style="font-size:14px;color:var(--muted)">GW</span></div>
+      <div class="stat-lbl" data-ar="طاقة شمسية مركّبة" data-en="Installed Solar Capacity">طاقة شمسية مركّبة</div>
+      <div class="stat-delta delta-up">▲ 31%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🌿</div>
+      <div class="stat-num">14.2 <span style="font-size:14px;color:var(--muted)">%</span></div>
+      <div class="stat-lbl" data-ar="حصة المتجددة الحالية" data-en="Current Renewables Share">حصة المتجددة الحالية</div>
+      <div class="stat-delta delta-up">▲ 4.1%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📉</div>
+      <div class="stat-num">68 <span style="font-size:14px;color:var(--muted)">Mt</span></div>
+      <div class="stat-lbl" data-ar="تخفيض CO₂ مستهدف" data-en="CO₂ Reduction Target">تخفيض CO₂ مستهدف</div>
+      <div class="stat-delta delta-down">▼ 12% باقي</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('solar',this)">☀️ <span data-ar="شمسية" data-en="Solar">شمسية</span></button>
+    <button class="tab" onclick="showPanel('wind',this)">💨 <span data-ar="رياح" data-en="Wind">رياح</span></button>
+    <button class="tab" onclick="showPanel('conventional',this)">⛽ <span data-ar="تقليدية" data-en="Conventional">تقليدية</span></button>
+    <button class="tab" onclick="showPanel('future',this)">🔬 <span data-ar="مستقبلية" data-en="Future">مستقبلية</span></button>
+  </div>
+
+  <!-- Panel: Solar -->
+  <div class="tab-panel show" id="panel-solar">
+    <div class="section-head">
+      <div>
+        <div class="section-title" data-ar="مصادر الطاقة الشمسية" data-en="Solar Energy Sources">مصادر الطاقة الشمسية</div>
+        <div class="section-sub" data-ar="أكثر من 300 يوم مشمس سنوياً في المملكة" data-en="More than 300 sunny days annually in the Kingdom">أكثر من 300 يوم مشمس سنوياً في المملكة</div>
+      </div>
+    </div>
+    <div class="energy-grid">
+      <div class="e-card solar" onclick="openModal('pv')">
+        <div class="e-card-header">
+          <div class="e-card-icon">☀️</div>
+          <span class="e-badge badge-green" data-ar="متجددة" data-en="Renewable">متجددة</span>
+        </div>
+        <div class="e-card-title" data-ar="الخلايا الكهروضوئية PV" data-en="Photovoltaic Cells PV">الخلايا الكهروضوئية PV</div>
+        <div class="e-card-desc" data-ar="تحوّل ضوء الشمس مباشرة إلى كهرباء عبر الخلايا السيليكونية. الأوفر تكلفة والأسرع انتشاراً في المملكة." data-en="Converts sunlight directly into electricity via silicon cells. The most cost-effective and fastest-growing in the Kingdom.">تحوّل ضوء الشمس مباشرة إلى كهرباء عبر الخلايا السيليكونية. الأوفر تكلفة والأسرع انتشاراً في المملكة.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="الكفاءة" data-en="Efficiency">الكفاءة</div><div class="e-card-stat-val">20–24%</div></div>
+          <div><div class="e-card-stat-label" data-ar="العمر الافتراضي" data-en="Lifespan">العمر الافتراضي</div><div class="e-card-stat-val" data-ar="25 سنة" data-en="25 years">25 سنة</div></div>
+        </div>
+      </div>
+
+      <div class="e-card solar" onclick="openModal('csp')">
+        <div class="e-card-header">
+          <div class="e-card-icon">🔆</div>
+          <span class="e-badge badge-green" data-ar="متجددة" data-en="Renewable">متجددة</span>
+        </div>
+        <div class="e-card-title" data-ar="الطاقة الشمسية المركّزة CSP" data-en="Concentrated Solar Power CSP">الطاقة الشمسية المركّزة CSP</div>
+        <div class="e-card-desc" data-ar="تستخدم مرايا عاكسة لتركيز الشمس وتوليد بخار يدير توربينات. تتميز بإمكانية تخزين الطاقة الحرارية." data-en="Uses mirrors to concentrate sunlight and generate steam that drives turbines. Features thermal energy storage capability.">تستخدم مرايا عاكسة لتركيز الشمس وتوليد بخار يدير توربينات. تتميز بإمكانية تخزين الطاقة الحرارية.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="الكفاءة" data-en="Efficiency">الكفاءة</div><div class="e-card-stat-val">35–40%</div></div>
+          <div><div class="e-card-stat-label" data-ar="التخزين" data-en="Storage">التخزين</div><div class="e-card-stat-val" data-ar="حتى 15 ساعة" data-en="Up to 15h">حتى 15 ساعة</div></div>
+        </div>
+      </div>
+
+      <div class="e-card solar" onclick="openModal('floating')">
+        <div class="e-card-header">
+          <div class="e-card-icon">🌊</div>
+          <span class="e-badge badge-gold" data-ar="ناشئة" data-en="Emerging">ناشئة</span>
+        </div>
+        <div class="e-card-title" data-ar="الطاقة الشمسية العائمة" data-en="Floating Solar Energy">الطاقة الشمسية العائمة</div>
+        <div class="e-card-desc" data-ar="ألواح شمسية مثبتة على أسطح المائية. تقلل بخر الماء وتزيد كفاءة الألواح بسبب تبريد الماء." data-en="Solar panels mounted on water surfaces. Reduces water evaporation and increases panel efficiency through water cooling.">ألواح شمسية مثبتة على أسطح المائية. تقلل بخر الماء وتزيد كفاءة الألواح بسبب تبريد الماء.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="الكفاءة الإضافية" data-en="Extra Efficiency">الكفاءة الإضافية</div><div class="e-card-stat-val">+10%</div></div>
+          <div><div class="e-card-stat-label" data-ar="توفير المياه" data-en="Water Saving">توفير المياه</div><div class="e-card-stat-val">70%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Wind -->
+  <div class="tab-panel" id="panel-wind">
+    <div class="energy-grid">
+      <div class="e-card wind" onclick="openModal('onshore')">
+        <div class="e-card-header"><div class="e-card-icon">💨</div><span class="e-badge badge-green" data-ar="متجددة" data-en="Renewable">متجددة</span></div>
+        <div class="e-card-title" data-ar="طاقة الرياح البرية" data-en="Onshore Wind Energy">طاقة الرياح البرية</div>
+        <div class="e-card-desc" data-ar="توربينات ضخمة تحوّل حركة الرياح إلى كهرباء. منطقة تبوك والرياض لديهما أفضل إمكانات رياح في المملكة." data-en="Large turbines converting wind movement to electricity. Tabuk and Riyadh regions have the best wind potential in the Kingdom.">توربينات ضخمة تحوّل حركة الرياح إلى كهرباء. منطقة تبوك والرياض لديهما أفضل إمكانات رياح في المملكة.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="الطاقة المخططة" data-en="Planned Capacity">الطاقة المخططة</div><div class="e-card-stat-val">16 GW</div></div>
+          <div><div class="e-card-stat-label" data-ar="التكلفة" data-en="Cost">التكلفة</div><div class="e-card-stat-val" data-ar="منخفضة" data-en="Low">منخفضة</div></div>
+        </div>
+      </div>
+      <div class="e-card wind" onclick="openModal('offshore')">
+        <div class="e-card-header"><div class="e-card-icon">🌬️</div><span class="e-badge badge-gold" data-ar="قيد التطوير" data-en="Under Development">قيد التطوير</span></div>
+        <div class="e-card-title" data-ar="طاقة الرياح البحرية" data-en="Offshore Wind Energy">طاقة الرياح البحرية</div>
+        <div class="e-card-desc" data-ar="توربينات مثبتة في البحر حيث الرياح أقوى وأكثر استمرارية. مشاريع في البحر الأحمر قيد الدراسة." data-en="Turbines installed at sea where winds are stronger and more consistent. Projects in the Red Sea under study.">توربينات مثبتة في البحر حيث الرياح أقوى وأكثر استمرارية. مشاريع في البحر الأحمر قيد الدراسة.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="كفاءة أعلى بـ" data-en="Higher Efficiency">كفاءة أعلى بـ</div><div class="e-card-stat-val">40%</div></div>
+          <div><div class="e-card-stat-label" data-ar="الحالة" data-en="Status">الحالة</div><div class="e-card-stat-val" data-ar="دراسة" data-en="Study">دراسة</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Conventional -->
+  <div class="tab-panel" id="panel-conventional">
+    <div class="energy-grid">
+      <div class="e-card oil" onclick="openModal('oil')">
+        <div class="e-card-header"><div class="e-card-icon">🛢️</div><span class="e-badge badge-gray" data-ar="تقليدية" data-en="Conventional">تقليدية</span></div>
+        <div class="e-card-title" data-ar="الطاقة النفطية" data-en="Oil-Based Energy">الطاقة النفطية</div>
+        <div class="e-card-desc" data-ar="المصدر التاريخي الرئيسي للطاقة في المملكة. تُستخدم في توليد الكهرباء والنقل والصناعة. الهدف تقليل الاعتماد عليها بحلول 2030." data-en="The Kingdom's main historical energy source. Used in electricity generation, transportation, and industry. Goal is to reduce dependence by 2030.">المصدر التاريخي الرئيسي للطاقة في المملكة.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="الحصة الحالية" data-en="Current Share">الحصة الحالية</div><div class="e-card-stat-val">52%</div></div>
+          <div><div class="e-card-stat-label" data-ar="هدف 2030" data-en="2030 Target">هدف 2030</div><div class="e-card-stat-val">30%</div></div>
+        </div>
+      </div>
+      <div class="e-card gas" onclick="openModal('gas')">
+        <div class="e-card-header"><div class="e-card-icon">🔥</div><span class="e-badge badge-gray" data-ar="تقليدية" data-en="Conventional">تقليدية</span></div>
+        <div class="e-card-title" data-ar="الغاز الطبيعي" data-en="Natural Gas">الغاز الطبيعي</div>
+        <div class="e-card-desc" data-ar="أنظف من النفط وأوفر كلفة في التشغيل. يُستخدم بشكل متزايد كوقود انتقالي نحو الطاقة المتجددة." data-en="Cleaner than oil and more cost-effective to operate. Increasingly used as a transition fuel toward renewable energy.">أنظف من النفط وأوفر كلفة في التشغيل.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="الحصة الحالية" data-en="Current Share">الحصة الحالية</div><div class="e-card-stat-val">40%</div></div>
+          <div><div class="e-card-stat-label" data-ar="الانبعاثات" data-en="Emissions">الانبعاثات</div><div class="e-card-stat-val" data-ar="أقل 45%" data-en="45% Less">أقل 45%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Future -->
+  <div class="tab-panel" id="panel-future">
+    <div class="energy-grid">
+      <div class="e-card hydro" onclick="openModal('hydrogen')">
+        <div class="e-card-header"><div class="e-card-icon">💧</div><span class="e-badge badge-green" data-ar="مستقبلية" data-en="Future">مستقبلية</span></div>
+        <div class="e-card-title" data-ar="الهيدروجين الأخضر" data-en="Green Hydrogen">الهيدروجين الأخضر</div>
+        <div class="e-card-desc" data-ar="يُنتج عبر تحليل الماء بالكهرباء المتجددة. مشروع نيوم سيكون أكبر مصنع هيدروجين أخضر في العالم بطاقة 600 طن يومياً." data-en="Produced by electrolyzing water with renewable electricity. NEOM project will be the world's largest green hydrogen plant at 600 tons/day.">يُنتج عبر تحليل الماء بالكهرباء المتجددة.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="طاقة نيوم" data-en="NEOM Capacity">طاقة نيوم</div><div class="e-card-stat-val" data-ar="600 طن/يوم" data-en="600 T/day">600 طن/يوم</div></div>
+          <div><div class="e-card-stat-label" data-ar="الإطار" data-en="Timeline">الإطار</div><div class="e-card-stat-val">2026</div></div>
+        </div>
+      </div>
+      <div class="e-card nuclear" onclick="openModal('nuclear')">
+        <div class="e-card-header"><div class="e-card-icon">⚛️</div><span class="e-badge badge-gold" data-ar="قيد التطوير" data-en="Under Development">قيد التطوير</span></div>
+        <div class="e-card-title" data-ar="الطاقة النووية" data-en="Nuclear Energy">الطاقة النووية</div>
+        <div class="e-card-desc" data-ar="المملكة تخطط لإنشاء 16 مفاعلاً نووياً بحلول 2040 لتوليد 17 جيجاواط. لا تنبعث منها CO₂ وتعمل على مدار الساعة." data-en="The Kingdom plans to build 16 nuclear reactors by 2040 generating 17 GW. Zero CO₂ emissions and operates around the clock.">المملكة تخطط لإنشاء 16 مفاعلاً نووياً بحلول 2040.</div>
+        <div class="e-card-footer">
+          <div><div class="e-card-stat-label" data-ar="المفاعلات المخططة" data-en="Planned Reactors">المفاعلات المخططة</div><div class="e-card-stat-val">16</div></div>
+          <div><div class="e-card-stat-label" data-ar="الطاقة" data-en="Capacity">الطاقة</div><div class="e-card-stat-val">17 GW</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spacer -->
+  <div style="height:48px"></div>
+
+  <!-- News -->
+  <div class="section-head">
+    <div>
+      <div class="section-title" data-ar="أحدث الأخبار" data-en="Latest News">أحدث الأخبار</div>
+      <div class="section-sub" data-ar="آخر مستجدات قطاع الطاقة في المملكة" data-en="Latest energy sector developments in the Kingdom">آخر مستجدات قطاع الطاقة في المملكة</div>
+    </div>
+    <a class="see-all" data-ar="عرض الكل ←" data-en="See All →">عرض الكل ←</a>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-main">
+      <div class="news-img">☀️</div>
+      <div class="news-body">
+        <div class="news-tag" data-ar="طاقة شمسية" data-en="Solar Energy">طاقة شمسية</div>
+        <div class="news-title" data-ar="مشروع نيوم الشمسي يسجّل رقماً قياسياً في الإنتاج" data-en="NEOM Solar Project Sets Production Record">مشروع نيوم الشمسي يسجّل رقماً قياسياً في الإنتاج</div>
+        <div class="news-desc" data-ar="أعلنت شركة أكوا باور عن تجاوز مشروع نيوم لطاقة 2.6 جيجاواط في الإنتاج الفعلي، متجاوزاً التوقعات بنسبة 18% خلال الربع الأول من 2025." data-en="ACWA Power announced NEOM project surpassed 2.6 GW in actual production, exceeding expectations by 18% in Q1 2025.">أعلنت شركة أكوا باور عن تجاوز مشروع نيوم لطاقة 2.6 جيجاواط في الإنتاج الفعلي.</div>
+        <div class="news-meta" data-ar="منذ يومين — أكوا باور" data-en="2 days ago — ACWA Power">منذ يومين — أكوا باور</div>
+      </div>
+    </div>
+
+    <div class="news-list">
+      <div class="news-item">
+        <div class="news-item-tag" data-ar="رؤية 2030" data-en="Vision 2030">رؤية 2030</div>
+        <div class="news-item-title" data-ar="المملكة تُسرّع خطط الهيدروجين الأخضر مع شركاء دوليين جدد" data-en="Kingdom Accelerates Green Hydrogen Plans with New International Partners">المملكة تُسرّع خطط الهيدروجين الأخضر مع شركاء دوليين جدد</div>
+        <div class="news-item-meta" data-ar="منذ 4 أيام — وزارة الطاقة" data-en="4 days ago — Ministry of Energy">منذ 4 أيام — وزارة الطاقة</div>
+      </div>
+      <div class="news-item">
+        <div class="news-item-tag" data-ar="طاقة الرياح" data-en="Wind Energy">طاقة الرياح</div>
+        <div class="news-item-title" data-ar="مشروع رياح الدوادمي يبدأ تشغيله التجاري بطاقة 400 ميجاواط" data-en="Duwaydami Wind Project Starts Commercial Operation at 400 MW">مشروع رياح الدوادمي يبدأ تشغيله التجاري بطاقة 400 ميجاواط</div>
+        <div class="news-item-meta" data-ar="منذ أسبوع — أرامكو" data-en="1 week ago — Aramco">منذ أسبوع — أرامكو</div>
+      </div>
+      <div class="news-item">
+        <div class="news-item-tag" data-ar="طاقة نووية" data-en="Nuclear Energy">طاقة نووية</div>
+        <div class="news-item-title" data-ar="كاكاب توقّع اتفاقية لدراسة إنشاء أول مفاعل نووي سعودي" data-en="KACARE Signs Agreement to Study First Saudi Nuclear Reactor">كاكاب توقّع اتفاقية لدراسة إنشاء أول مفاعل نووي سعودي</div>
+        <div class="news-item-meta" data-ar="منذ أسبوعين — كاكاب" data-en="2 weeks ago — KACARE">منذ أسبوعين — كاكاب</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div style="font-size:13px" data-ar="© 2025 بوابة الطاقة — المملكة العربية السعودية" data-en="© 2025 Energy Portal — Kingdom of Saudi Arabia">© 2025 بوابة الطاقة — المملكة العربية السعودية</div>
+    <div class="footer-links">
+      <a data-ar="سياسة الخصوصية" data-en="Privacy Policy">سياسة الخصوصية</a>
+      <a data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</a>
+      <a data-ar="وزارة الطاقة" data-en="Ministry of Energy">وزارة الطاقة</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const lang = { current: 'ar' };
+
+const modalData = {
+  ar: {
+    pv: { title:'الخلايا الكهروضوئية PV', body:`تعتمد على تأثير كهروضوئي اكتشفه العالم بيكريل عام 1839. حين يسقط الضوء على الخلية السيليكونية، تتحرر الإلكترونات وتولّد تيار كهربائي مباشر (DC) يحوّله العاكس إلى تيار متردد (AC) يناسب الشبكة.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">20–24%</div><div class="modal-stat-l">الكفاءة</div></div><div class="modal-stat"><div class="modal-stat-v">25 سنة</div><div class="modal-stat-l">العمر الافتراضي</div></div><div class="modal-stat"><div class="modal-stat-v">130 GW</div><div class="modal-stat-l">هدف 2030</div></div></div>في المملكة، تُعدّ الرياض والمنطقة الشرقية وتبوك من أفضل المناطق لتركيب الألواح بفضل ساعات الإشعاع الشمسي المرتفعة التي تتجاوز 6 ساعات ذروة يومياً.`},
+    csp: { title:'الطاقة الشمسية المركّزة CSP', body:`تعتمد على المرايا المقعّرة (Heliostats) لتركيز أشعة الشمس على برج مركزي يحتوي على سائل ناقل للحرارة. يصل السائل إلى درجة 565°م ويولّد بخاراً يدير توربيناً.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">35–40%</div><div class="modal-stat-l">الكفاءة</div></div><div class="modal-stat"><div class="modal-stat-v">15 ساعة</div><div class="modal-stat-l">تخزين حراري</div></div><div class="modal-stat"><div class="modal-stat-v">565°م</div><div class="modal-stat-l">درجة الحرارة</div></div></div>ميزتها الكبرى: تخزين الطاقة حرارياً يجعلها تعمل ليلاً. مشروع نيوم يعتمدها جزئياً.`},
+    floating: { title:'الطاقة الشمسية العائمة', body:`ألواح شمسية مثبتة على أسطح عائمة فوق الخزانات والبحيرات. تزيد الكفاءة 10% بسبب تبريد الماء، وتقلل التبخر 70%، وتوفر المساحات البرية.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">+10%</div><div class="modal-stat-l">كفاءة إضافية</div></div><div class="modal-stat"><div class="modal-stat-v">70%</div><div class="modal-stat-l">توفير المياه</div></div></div>المملكة تدرس تطبيقها على سدود وخزانات المياه في المناطق الجافة.`},
+    onshore: { title:'طاقة الرياح البرية', body:`توربينات بارتفاع 100–150م تحوّل طاقة الرياح الحركية إلى كهرباء. تحتاج سرعة رياح 3–25 م/ث للعمل.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">16 GW</div><div class="modal-stat-l">هدف 2030</div></div><div class="modal-stat"><div class="modal-stat-v">6.5 م/ث</div><div class="modal-stat-l">متوسط سرعة تبوك</div></div></div>مشروع رياح الدوادمي (400 MW) أحد أكبر مشاريع المملكة.`},
+    offshore: { title:'طاقة الرياح البحرية', body:`توربينات في البحر حيث الرياح أقوى بـ 40% من البرية وأكثر استمرارية. تكلفتها أعلى لكن إنتاجها أوفر.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">40%</div><div class="modal-stat-l">رياح أقوى</div></div><div class="modal-stat"><div class="modal-stat-v">البحر الأحمر</div><div class="modal-stat-l">الموقع المدروس</div></div></div>المملكة تدرس إمكانياتها في البحر الأحمر بالتعاون مع شركات أوروبية.`},
+    oil: { title:'الطاقة النفطية', body:`النفط الخام يُحرق في محطات التوليد لإنتاج البخار الذي يدير التوربينات. رغم كفاءته العالية، يُنتج كميات كبيرة من CO₂.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">52%</div><div class="modal-stat-l">الحصة الحالية</div></div><div class="modal-stat"><div class="modal-stat-v">30%</div><div class="modal-stat-l">هدف 2030</div></div></div>استراتيجية المملكة تقوم على تقليص الاستخدام المحلي لتصدير المزيد.`},
+    gas: { title:'الغاز الطبيعي', body:`أنظف وقود أحفوري — ينبعث منه نصف ثاني أكسيد الكربون مقارنة بالفحم، وأقل بـ45% من النفط. يُعدّ وقود انتقالي مثالياً.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">40%</div><div class="modal-stat-l">الحصة الحالية</div></div><div class="modal-stat"><div class="modal-stat-v">-45%</div><div class="modal-stat-l">CO₂ مقارنة بالنفط</div></div></div>احتياطيات المملكة من الغاز تتجاوز 8 تريليون م³.`},
+    hydrogen: { title:'الهيدروجين الأخضر', body:`يُنتج بتحليل الماء كهربائياً (Electrolysis) باستخدام طاقة متجددة. لا ينبعث منه CO₂ عند الاحتراق — الناتج الوحيد هو بخار الماء.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">600 طن/يوم</div><div class="modal-stat-l">طاقة مشروع نيوم</div></div><div class="modal-stat"><div class="modal-stat-v">2026</div><div class="modal-stat-l">بدء التشغيل</div></div><div class="modal-stat"><div class="modal-stat-v">$8.4B</div><div class="modal-stat-l">حجم الاستثمار</div></div></div>مشروع نيوم سيكون الأكبر عالمياً بشراكة مع Air Products وACWA Power.`},
+    nuclear: { title:'الطاقة النووية', body:`تعتمد على الانشطار النووي (Fission) لتوليد حرارة هائلة تدير توربينات. لا تنبعث منها CO₂ وتعمل 24/7 بعكس الشمسية والريحية.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">16</div><div class="modal-stat-l">مفاعل مخطط</div></div><div class="modal-stat"><div class="modal-stat-v">17 GW</div><div class="modal-stat-l">الطاقة المستهدفة</div></div><div class="modal-stat"><div class="modal-stat-v">2040</div><div class="modal-stat-l">الإطار الزمني</div></div></div>المملكة تتفاوض مع كوريا الجنوبية والصين والولايات المتحدة لبناء المفاعلات.`},
+  },
+  en: {
+    pv: { title:'Photovoltaic Cells PV', body:`Based on the photoelectric effect discovered by Becquerel in 1839. When light hits a silicon cell, electrons are freed and generate DC current converted by inverters to AC.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">20–24%</div><div class="modal-stat-l">Efficiency</div></div><div class="modal-stat"><div class="modal-stat-v">25 years</div><div class="modal-stat-l">Lifespan</div></div><div class="modal-stat"><div class="modal-stat-v">130 GW</div><div class="modal-stat-l">2030 Target</div></div></div>Riyadh, Eastern Province, and Tabuk are among the best regions with over 6 peak sun hours daily.`},
+    csp:{title:'Concentrated Solar Power CSP',body:`Uses concave mirrors (Heliostats) to focus sunlight on a central tower containing heat-transfer fluid reaching 565°C to generate steam.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">35–40%</div><div class="modal-stat-l">Efficiency</div></div><div class="modal-stat"><div class="modal-stat-v">15 hours</div><div class="modal-stat-l">Thermal storage</div></div></div>Key advantage: thermal storage allows night-time operation.`},
+    floating:{title:'Floating Solar Energy',body:`Solar panels on floating structures over reservoirs. Increase efficiency 10% via water cooling and reduce evaporation 70%.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">+10%</div><div class="modal-stat-l">Extra efficiency</div></div><div class="modal-stat"><div class="modal-stat-v">70%</div><div class="modal-stat-l">Water saving</div></div></div>Saudi Arabia studies deployment on dams and water reservoirs in arid regions.`},
+    onshore:{title:'Onshore Wind Energy',body:`Turbines 100–150m tall converting kinetic wind energy to electricity. Require wind speed 3–25 m/s.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">16 GW</div><div class="modal-stat-l">2030 Target</div></div><div class="modal-stat"><div class="modal-stat-v">6.5 m/s</div><div class="modal-stat-l">Tabuk average</div></div></div>Duwaydami Wind Project (400 MW) is one of the Kingdom's largest.`},
+    offshore:{title:'Offshore Wind Energy',body:`Sea turbines where wind is 40% stronger and more consistent than onshore. Higher cost but greater output.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">40%</div><div class="modal-stat-l">Stronger winds</div></div><div class="modal-stat"><div class="modal-stat-v">Red Sea</div><div class="modal-stat-l">Study location</div></div></div>Saudi Arabia studying potential in the Red Sea with European companies.`},
+    oil:{title:'Oil-Based Energy',body:`Crude oil burned in power plants to produce steam driving turbines. High efficiency but produces significant CO₂.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">52%</div><div class="modal-stat-l">Current share</div></div><div class="modal-stat"><div class="modal-stat-v">30%</div><div class="modal-stat-l">2030 Target</div></div></div>Saudi strategy: reduce local consumption to export more.`},
+    gas:{title:'Natural Gas',body:`Cleanest fossil fuel — emits half the CO₂ of coal and 45% less than oil. Considered an ideal transition fuel.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">40%</div><div class="modal-stat-l">Current share</div></div><div class="modal-stat"><div class="modal-stat-v">-45%</div><div class="modal-stat-l">CO₂ vs oil</div></div></div>Saudi gas reserves exceed 8 trillion cubic meters.`},
+    hydrogen:{title:'Green Hydrogen',body:`Produced by electrolysis of water using renewable electricity. Zero CO₂ emissions — only water vapor when burned.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">600 T/day</div><div class="modal-stat-l">NEOM capacity</div></div><div class="modal-stat"><div class="modal-stat-v">2026</div><div class="modal-stat-l">Start date</div></div><div class="modal-stat"><div class="modal-stat-v">$8.4B</div><div class="modal-stat-l">Investment</div></div></div>NEOM project will be the world's largest, partnered with Air Products and ACWA Power.`},
+    nuclear:{title:'Nuclear Energy',body:`Uses nuclear fission to generate immense heat driving turbines. Zero CO₂ and operates 24/7 unlike solar or wind.<div class="modal-stat-row"><div class="modal-stat"><div class="modal-stat-v">16</div><div class="modal-stat-l">Planned reactors</div></div><div class="modal-stat"><div class="modal-stat-v">17 GW</div><div class="modal-stat-l">Target capacity</div></div><div class="modal-stat"><div class="modal-stat-v">2040</div><div class="modal-stat-l">Timeline</div></div></div>Saudi Arabia negotiating with South Korea, China, and the US to build the reactors.`},
+  }
+};
+
+function setLang(l, btn) {
+  lang.current = l;
+  const root = document.getElementById('html-root');
+  root.lang = l;
+  root.dir  = l === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+    const val = el.getAttribute('data-' + l);
+    if (val) el.innerHTML = val;
+  });
+}
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('show'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('show');
+  btn.classList.add('active');
+}
+
+function setTab(btn, id) {
+  document.querySelectorAll('.tnav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function openModal(key) {
+  const d = modalData[lang.current][key];
+  if (!d) return;
+  document.getElementById('modalTitle').textContent = d.title;
+  document.getElementById('modalBody').innerHTML = d.body;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+}
+</script>
+</body>
+</html>

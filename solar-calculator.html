@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة الطاقة الشمسية</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #0a0f1a;
+  --bg-card: #111928;
+  --bg-card2: #16213a;
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.12);
+  --amber-glow: rgba(245,158,11,0.3);
+  --green: #22d3a0;
+  --green-dim: rgba(34,211,160,0.1);
+  --blue: #3b82f6;
+  --text: #e2e8f8;
+  --muted: #5a7090;
+  --dim: #2a3a55;
+  --border: rgba(245,158,11,0.1);
+  --border-hover: rgba(245,158,11,0.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* sun ray background */
+body::before {
+  content:'';
+  position:fixed;
+  top:-200px; left:50%;
+  transform: translateX(-50%);
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 65%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.page { position:relative; z-index:1; max-width: 1100px; margin:0 auto; padding: 40px 24px; }
+
+/* Header */
+.header { text-align:center; margin-bottom: 48px; }
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--amber-dim);
+  border: 1px solid var(--border-hover);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--amber);
+  margin-bottom: 20px;
+}
+
+.sun-icon {
+  width: 32px; height: 32px;
+  animation: spin 12s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.header h1 span { color: var(--amber); }
+
+.header p { font-size: 15px; color: var(--muted); max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+
+/* Card */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color .3s;
+}
+
+.card:hover { border-color: var(--border-hover); }
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.card-title-icon {
+  width: 32px; height: 32px;
+  background: var(--amber-dim);
+  border-radius: 8px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 16px;
+}
+
+/* Form */
+.field { margin-bottom: 20px; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.field-row { display: flex; gap: 10px; }
+
+.input-wrap { position: relative; flex:1; }
+
+.input-wrap input, .input-wrap select {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg-card2);
+  border: 1px solid var(--dim);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color .2s;
+  appearance: none;
+}
+
+.input-wrap input:focus, .input-wrap select:focus {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px var(--amber-dim);
+}
+
+.input-unit {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+/* Slider */
+.slider-wrap { position:relative; }
+
+.slider-wrap input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--dim);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.slider-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber-glow);
+  cursor: pointer;
+}
+
+.slider-val {
+  text-align: center;
+  font-size: 13px;
+  color: var(--amber);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* City pills */
+.city-pills { display: flex; flex-wrap:wrap; gap: 8px; margin-top: 6px; }
+
+.pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  border: 1px solid var(--dim);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+  background: transparent;
+  font-family: inherit;
+}
+
+.pill:hover { border-color: var(--amber); color: var(--amber); }
+.pill.active { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+
+/* Calculate btn */
+.calc-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--amber);
+  color: #0a0f1a;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.calc-btn:hover { background: #fbbf24; transform: translateY(-1px); box-shadow: 0 8px 24px var(--amber-glow); }
+.calc-btn:active { transform: translateY(0); }
+
+/* Results */
+.results { display: none; flex-direction: column; gap: 16px; }
+.results.show { display: flex; }
+
+/* Big result */
+.result-hero {
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+  border: 1px solid var(--border-hover);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.result-hero-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.result-hero-value { font-size: 3rem; font-weight: 700; color: var(--amber); line-height:1; }
+.result-hero-unit  { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.result-hero-sub   { font-size: 12px; color: var(--green); margin-top: 12px; }
+
+/* Stat grid */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.stat-box {
+  background: var(--bg-card2);
+  border: 1px solid var(--dim);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.stat-box-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.stat-box-value { font-size: 20px; font-weight: 700; }
+.stat-box.green .stat-box-value { color: var(--green); }
+.stat-box.amber .stat-box-value { color: var(--amber); }
+.stat-box.blue  .stat-box-value { color: var(--blue); }
+.stat-box.red   .stat-box-value { color: #f43f5e; }
+
+/* Chart area */
+.chart-card { grid-column: 1 / -1; }
+.chart-wrap { position:relative; height: 220px; }
+
+/* Comparison bar */
+.compare-wrap { margin-top: 20px; }
+.compare-title { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+
+.compare-item { margin-bottom: 14px; }
+.compare-top { display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; }
+.compare-name { color: var(--muted); }
+.compare-val  { font-weight: 600; }
+.compare-track { height: 6px; background: var(--dim); border-radius: 3px; overflow:hidden; }
+.compare-fill  { height:100%; border-radius:3px; transition: width 1s ease; }
+
+/* Payback timeline */
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 16px;
+  position: relative;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 16px; right: 0; left: 0;
+  height: 2px;
+  background: var(--dim);
+  z-index: 0;
+}
+
+.timeline-fill {
+  position: absolute;
+  top: 16px; right: 0;
+  height: 2px;
+  background: var(--amber);
+  z-index: 1;
+  transition: width 1s ease;
+}
+
+.t-point {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.t-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--dim);
+  border: 2px solid var(--dim);
+  margin-bottom: 8px;
+  transition: all .5s;
+}
+
+.t-dot.done { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 8px var(--amber-glow); }
+.t-label { font-size: 10px; color: var(--muted); text-align:center; }
+
+/* empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--muted);
+  gap: 12px;
+}
+
+.empty-sun { font-size: 48px; opacity: .3; }
+.empty-text { font-size: 13px; line-height: 1.6; }
+
+/* mobile */
+@media(max-width:700px){
+  .layout { grid-template-columns: 1fr; }
+  .chart-card { grid-column: 1; }
+  .header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">
+      <svg class="sun-icon" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="6" fill="#f59e0b"/>
+        <g stroke="#f59e0b" stroke-width="2" stroke-linecap="round">
+          <line x1="16" y1="2"  x2="16" y2="6"/>
+          <line x1="16" y1="26" x2="16" y2="30"/>
+          <line x1="2"  y1="16" x2="6"  y2="16"/>
+          <line x1="26" y1="16" x2="30" y2="16"/>
+          <line x1="5.5"  y1="5.5"  x2="8.3"  y2="8.3"/>
+          <line x1="23.7" y1="23.7" x2="26.5" y2="26.5"/>
+          <line x1="26.5" y1="5.5"  x2="23.7" y2="8.3"/>
+          <line x1="8.3"  y1="23.7" x2="5.5"  y2="26.5"/>
+        </g>
+      </svg>
+      حاسبة الطاقة الشمسية — رؤية 2030
+    </div>
+
+    <h1>وفّر على فاتورة الكهرباء<br><span>بالطاقة الشمسية</span></h1>
+    <p>أدخل بيانات منشأتك واحسب التوفير المتوقع والعائد على الاستثمار</p>
+  </div>
+
+  <!-- Main layout -->
+  <div class="layout">
+
+    <!-- Input Card -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">📐</div>
+        بيانات المنشأة
+      </div>
+
+      <div class="field">
+        <label>المدينة / المنطقة</label>
+        <div class="city-pills">
+          <button class="pill active" onclick="selectCity(this,'الرياض',5.8)">الرياض</button>
+          <button class="pill" onclick="selectCity(this,'جدة',5.4)">جدة</button>
+          <button class="pill" onclick="selectCity(this,'الدمام',5.6)">الدمام</button>
+          <button class="pill" onclick="selectCity(this,'مكة المكرمة',5.9)">مكة المكرمة</button>
+          <button class="pill" onclick="selectCity(this,'أبها',5.2)">أبها</button>
+          <button class="pill" onclick="selectCity(this,'تبوك',6.1)">تبوك</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>نوع المنشأة</label>
+        <div class="input-wrap">
+          <select id="buildingType" onchange="updateDefaults()">
+            <option value="residential">سكني — فيلا أو شقة</option>
+            <option value="commercial">تجاري — مكتب أو محل</option>
+            <option value="industrial">صناعي — مصنع أو مستودع</option>
+            <option value="government">حكومي — مبنى إداري</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>مساحة السقف المتاحة (م²)</label>
+        <div class="slider-wrap">
+          <input type="range" id="roofArea" min="20" max="2000" value="200" step="10" oninput="updateSlider('roofArea','roofVal',this.value,'م²')">
+          <div class="slider-val" id="roofVal">200 م²</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>فاتورة الكهرباء الشهرية الحالية (ريال)</label>
+        <div class="slider-wrap">
+          <input type="range" id="monthlyBill" min="200" max="50000" value="3000" step="100" oninput="updateSlider('monthlyBill','billVal',this.value,'ر.س')">
+          <div class="slider-val" id="billVal">3,000 ر.س</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>عدد ساعات التشغيل اليومي</label>
+        <div class="field-row">
+          <div class="input-wrap">
+            <input type="number" id="opHours" value="12" min="1" max="24">
+            <span class="input-unit">ساعة</span>
+          </div>
+          <div class="input-wrap">
+            <select id="systemType">
+              <option value="grid">متصل بالشبكة</option>
+              <option value="hybrid">هجين مع بطارية</option>
+              <option value="offgrid">مستقل كلياً</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">
+        ☀️ احسب التوفير الآن
+      </button>
+    </div>
+
+    <!-- Results Card -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">📊</div>
+        نتائج التحليل
+      </div>
+
+      <div class="empty-state" id="emptyState">
+        <div class="empty-sun">☀️</div>
+        <div class="empty-text">أدخل بيانات منشأتك واضغط<br>"احسب التوفير" لترى النتائج</div>
+      </div>
+
+      <div class="results" id="resultsArea">
+        <div class="result-hero">
+          <div class="result-hero-label">التوفير السنوي المتوقع</div>
+          <div class="result-hero-value" id="annualSaving">—</div>
+          <div class="result-hero-unit">ريال سعودي / السنة</div>
+          <div class="result-hero-sub" id="heroSub">—</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-box amber">
+            <div class="stat-box-label">⚡ طاقة النظام</div>
+            <div class="stat-box-value" id="systemPower">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">كيلوواط</div>
+          </div>
+          <div class="stat-box green">
+            <div class="stat-box-label">🔋 إنتاج سنوي</div>
+            <div class="stat-box-value" id="annualProd">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">كيلوواط/ساعة</div>
+          </div>
+          <div class="stat-box blue">
+            <div class="stat-box-label">💰 العائد على الاستثمار</div>
+            <div class="stat-box-value" id="roi">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">% سنوياً</div>
+          </div>
+          <div class="stat-box red">
+            <div class="stat-box-label">🌿 CO₂ موفّر</div>
+            <div class="stat-box-value" id="co2">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">طن/سنة</div>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-card2);border:1px solid var(--dim);border-radius:12px;padding:18px;">
+          <div class="compare-title">مقارنة التكلفة — كهرباء تقليدية مقابل شمسية</div>
+          <div class="compare-item">
+            <div class="compare-top">
+              <span class="compare-name">⚡ الكهرباء التقليدية (10 سنوات)</span>
+              <span class="compare-val" id="tradCost" style="color:var(--text)">—</span>
+            </div>
+            <div class="compare-track"><div class="compare-fill" id="tradBar" style="width:100%;background:#f43f5e"></div></div>
+          </div>
+          <div class="compare-item">
+            <div class="compare-top">
+              <span class="compare-name">☀️ الطاقة الشمسية (10 سنوات)</span>
+              <span class="compare-val" id="solarCost" style="color:var(--green)">—</span>
+            </div>
+            <div class="compare-track"><div class="compare-fill" id="solarBar" style="width:0%;background:var(--green)"></div></div>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-card2);border:1px solid var(--dim);border-radius:12px;padding:18px;">
+          <div class="compare-title">فترة الاسترداد — <span id="paybackYears" style="color:var(--amber)">—</span> سنوات</div>
+          <div class="timeline">
+            <div class="timeline-line"></div>
+            <div class="timeline-fill" id="timelineFill" style="width:0%"></div>
+            <div class="t-point"><div class="t-dot done"></div><div class="t-label">الآن</div></div>
+            <div class="t-point"><div class="t-dot" id="td2"></div><div class="t-label">سنة 3</div></div>
+            <div class="t-point"><div class="t-dot" id="td3"></div><div class="t-label">سنة 5</div></div>
+            <div class="t-point"><div class="t-dot" id="td4"></div><div class="t-label">سنة 7</div></div>
+            <div class="t-point"><div class="t-dot" id="td5"></div><div class="t-label">سنة 10</div></div>
+            <div class="t-point"><div class="t-dot" id="td6"></div><div class="t-label">سنة 15</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Chart full width -->
+    <div class="card chart-card" id="chartCard" style="display:none">
+      <div class="card-title">
+        <div class="card-title-icon">📈</div>
+        التوفير التراكمي على 15 سنة
+      </div>
+      <div class="chart-wrap">
+        <canvas id="savingChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let selectedSunHours = 5.8;
+let savingChartInstance = null;
+
+function selectCity(el, city, sunHours) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  selectedSunHours = sunHours;
+}
+
+function updateSlider(id, valId, value, unit) {
+  const num = parseFloat(value);
+  const formatted = num >= 1000 ? num.toLocaleString('ar-SA') : num;
+  document.getElementById(valId).textContent = formatted + ' ' + unit;
+}
+
+function updateDefaults() {
+  const type = document.getElementById('buildingType').value;
+  const defaults = { residential:200, commercial:500, industrial:1500, government:800 };
+  const bills    = { residential:3000, commercial:8000, industrial:30000, government:12000 };
+  document.getElementById('roofArea').value = defaults[type];
+  document.getElementById('monthlyBill').value = bills[type];
+  updateSlider('roofArea','roofVal', defaults[type],'م²');
+  updateSlider('monthlyBill','billVal', bills[type],'ر.س');
+}
+
+function fmt(n) { return Math.round(n).toLocaleString('ar-SA'); }
+
+function calculate() {
+  const roofArea   = parseFloat(document.getElementById('roofArea').value);
+  const monthlyBill= parseFloat(document.getElementById('monthlyBill').value);
+  const opHours    = parseFloat(document.getElementById('opHours').value) || 12;
+  const sysType    = document.getElementById('systemType').value;
+
+  // Calculations
+  const panelPer100m2 = 16;
+  const panelKw = 0.4;
+  const panels  = Math.floor(roofArea / 100 * panelPer100m2);
+  const systemKw = panels * panelKw;
+
+  const productionFactor = sysType === 'hybrid' ? 0.92 : sysType === 'offgrid' ? 0.85 : 0.97;
+  const annualKwh = systemKw * selectedSunHours * 365 * productionFactor;
+
+  const tariff = 0.18; // SAR per kWh avg Saudi
+  const annualSaving = Math.min(annualKwh * tariff, monthlyBill * 12 * 0.85);
+  const monthlySaving = annualSaving / 12;
+  const savingPct = Math.round((annualSaving / (monthlyBill * 12)) * 100);
+
+  const installCostPerKw = sysType === 'hybrid' ? 6500 : sysType === 'offgrid' ? 8000 : 4500;
+  const totalCost = systemKw * installCostPerKw;
+  const payback = totalCost / annualSaving;
+  const roi = (annualSaving / totalCost) * 100;
+  const co2 = annualKwh * 0.0005;
+
+  const tradTotal10 = monthlyBill * 12 * 10;
+  const solarTotal10 = totalCost + (monthlyBill * 12 * 10 * (1 - Math.min(savingPct/100, 0.85)));
+  const solarBarPct  = Math.round((solarTotal10 / tradTotal10) * 100);
+
+  // Update UI
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultsArea').classList.add('show');
+  document.getElementById('chartCard').style.display = 'block';
+
+  document.getElementById('annualSaving').textContent = fmt(annualSaving);
+  document.getElementById('heroSub').textContent = `توفير ${savingPct}% من فاتورتك — ${fmt(monthlySaving)} ريال شهرياً`;
+  document.getElementById('systemPower').textContent = systemKw.toFixed(1);
+  document.getElementById('annualProd').textContent = fmt(annualKwh);
+  document.getElementById('roi').textContent = roi.toFixed(1);
+  document.getElementById('co2').textContent = co2.toFixed(1);
+
+  document.getElementById('tradCost').textContent = fmt(tradTotal10) + ' ر.س';
+  document.getElementById('solarCost').textContent = fmt(solarTotal10) + ' ر.س';
+  document.getElementById('solarBar').style.width = solarBarPct + '%';
+
+  // Payback timeline
+  const py = payback;
+  document.getElementById('paybackYears').textContent = py.toFixed(1);
+  const thresholds = [0, 3, 5, 7, 10, 15];
+  ['td2','td3','td4','td5','td6'].forEach((id,i) => {
+    document.getElementById(id).classList.toggle('done', py <= thresholds[i+1]);
+  });
+  const fillPct = Math.min((py / 15) * 100, 100);
+  document.getElementById('timelineFill').style.width = fillPct + '%';
+
+  // Chart
+  drawChart(annualSaving, totalCost, monthlyBill);
+}
+
+function drawChart(annualSaving, totalCost, monthlyBill) {
+  const years = Array.from({length:16},(_,i)=>i);
+  const traditional = years.map(y => Math.round(monthlyBill * 12 * y));
+  const solar = years.map(y => Math.round(totalCost + (monthlyBill * 12 * y) - (annualSaving * y)));
+
+  document.getElementById('chartCard').style.display = 'block';
+
+  if (savingChartInstance) savingChartInstance.destroy();
+
+  const ctx = document.getElementById('savingChart').getContext('2d');
+
+  const gradTrad = ctx.createLinearGradient(0,0,0,220);
+  gradTrad.addColorStop(0,'rgba(244,63,94,0.3)');
+  gradTrad.addColorStop(1,'rgba(244,63,94,0)');
+
+  const gradSolar = ctx.createLinearGradient(0,0,0,220);
+  gradSolar.addColorStop(0,'rgba(34,211,160,0.25)');
+  gradSolar.addColorStop(1,'rgba(34,211,160,0)');
+
+  savingChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: years.map(y => 'سنة '+y),
+      datasets: [
+        {
+          label: 'الكهرباء التقليدية',
+          data: traditional,
+          borderColor: '#f43f5e',
+          backgroundColor: gradTrad,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+          borderWidth: 2,
+        },
+        {
+          label: 'الطاقة الشمسية',
+          data: solar,
+          borderColor: '#22d3a0',
+          backgroundColor: gradSolar,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+          borderWidth: 2,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#5a7090',
+            font: { family:"'IBM Plex Sans Arabic'", size:12 },
+            boxWidth: 10, boxHeight: 10, padding: 20
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': ' + Math.round(ctx.raw).toLocaleString('ar-SA') + ' ر.س'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color:'rgba(245,158,11,0.06)' },
+          ticks: { color:'#5a7090', font:{size:11} }
+        },
+        y: {
+          grid: { color:'rgba(245,158,11,0.06)' },
+          ticks: {
+            color:'#5a7090',
+            font:{size:11},
+            callback: v => (v/1000).toFixed(0)+'k ر.س'
+          }
+        }
+      }
+    }
+  });
+}
+
+Chart.defaults.color = '#5a7090';
+Chart.defaults.font.family = "'IBM Plex Sans Arabic', sans-serif";
+</script>
+</body>
+</html>
